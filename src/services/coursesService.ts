@@ -18,14 +18,13 @@ export const coursesService = {
                     "order",
                     ["video_url", "videoUrl"],
                     ["seconds_long", "secondsLong"],
-
                 ],
-                order: [['order', 'ASC']],
-                separate: true
+                order: [["order", "ASC"]],
+                separate: true,
             },
         });
 
-        return courseWithEpisodes
+        return courseWithEpisodes;
     },
 
     getRandomFeaturedCourses: async () => {
@@ -37,14 +36,23 @@ export const coursesService = {
                 ["thumbnail_url", "thumbnailUrl"],
             ],
             where: {
-                featured: true
+                featured: true,
             },
+        });
 
+        const randomFeaturedCourses = featuredCourses.sort(
+            () => 0.5 - Math.random()
+        );
 
-        })
+        return randomFeaturedCourses.slice(0, 3);
+    },
 
-        const randomFeaturedCourses = featuredCourses.sort(() => 0.5 - Math.random())
+    getTopTenNewest: async () => {
+        const courses = await Course.findAll({
+            limit: 10,
+            order: [["created_at", "DESC"]],
+        });
 
-        return randomFeaturedCourses.slice(0, 3)
-    }
+        return courses;
+    },
 };

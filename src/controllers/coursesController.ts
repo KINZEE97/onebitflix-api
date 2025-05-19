@@ -15,6 +15,20 @@ export const coursesController = {
             }
         }
     },
+
+    //GET /courses/newest
+    newest: async (req: Request, res: Response) => {
+
+        try {
+            const newestCourses = await coursesService.getTopTenNewest();
+            return res.json(newestCourses)
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({ message: err.message })
+            }
+        }
+    },
+
     //GET /courses/:id
     show: async (req: Request, res: Response) => {
         const { id } = req.params;
