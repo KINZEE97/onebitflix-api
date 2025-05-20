@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { Course } from "../models";
 
 export const coursesService = {
@@ -55,4 +56,31 @@ export const coursesService = {
 
         return courses;
     },
+
+    findByName: async (name: string, page: number, perPage: number) => {
+
+        const offset = (page - 1) * perPage;
+        const { count, rows } = await Course.findAndCountAll({
+            attributes: [
+                "id",
+                "name",
+                "synopsis",
+                ["thumbnail_url", "thumbnailUrl"],
+            ],
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`
+                }
+            },
+            limit: perPage,
+            offset
+        });
+
+        return {
+            courses: rows,
+            page: page,
+            perPage: perPage,
+            count: count
+        }
+    }
 };
