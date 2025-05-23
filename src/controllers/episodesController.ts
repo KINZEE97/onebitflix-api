@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { episodeService } from "../services/episodeService";
+import { AuthenticatedRequest } from "../middlewares/auth";
 
 
 export const episodesController = {
@@ -18,5 +19,39 @@ export const episodesController = {
                 res.status(500).json({ message: error.message });
             }
         }
+    },
+
+    // GET /episodes/:id/watchTime
+    getWatchTime: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user!.id
+        const episodeId = req.params.id
+
+        try {
+            const watchTime = await episodeService.getWatchTime(userId, Number(episodeId))
+
+            return res.json(watchTime)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ message: error.message });
+            }
+        }
+
+    },
+
+    setWatchTime: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user!.id
+        const episodeId = +req.params.id
+        const { seconds } = req.body
+
+        try {
+            const watchTime = await episodeService.setWatchTime({ userId, episodeId, seconds })
+
+            return res.json(watchTime)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ message: error.message });
+            }
+        }
+
     }
 }
