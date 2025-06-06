@@ -1,16 +1,16 @@
-import jwt, { Secret } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import { JWT_KEY_SECRET } from '../config/enviroment'
 
-const secret: Secret = 'your_jwt_secret'
 
 export const jwtService = {
     signToken: (payload: string | object | Buffer, expiration: string | number) => {
-        return jwt.sign(payload, secret, {
+        return jwt.sign(payload, JWT_KEY_SECRET, {
             expiresIn: expiration
         })
     },
 
     verifyToken: (token: string, callbackfn: jwt.VerifyCallback) => {
-        jwt.verify(token, secret, callbackfn)
+        jwt.verify(token, JWT_KEY_SECRET, callbackfn)
 
     }
 }
